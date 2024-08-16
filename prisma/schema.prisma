@@ -14,6 +14,7 @@ model User {
   name        String
   email       String     @unique
   points      Point[]
+  brands      Brand[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 }
@@ -22,6 +23,10 @@ model Brand {
   id          String     @id @default(uuid()) @db.VarChar(191)
   name        String
   description String?
+  websiteUrl  String
+  logoUrl     String
+  ownerId     String
+  owner       User       @relation(fields: [ownerId], references: [id])
   rewards     Reward[]
   points      Point[]    
   createdAt   DateTime   @default(now())

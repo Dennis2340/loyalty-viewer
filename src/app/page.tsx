@@ -21,7 +21,7 @@ export default function Home() {
 
       <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-3 lg:text-left">
         <a
-          href="/brands"
+          href="/branddashboard"
           className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-blue-300 hover:bg-blue-100"
         >
           <h2 className="mb-3 text-2xl font-semibold text-blue-900">
@@ -36,7 +36,7 @@ export default function Home() {
         </a>
 
         <a
-          href="/dashboard"
+          href="/userdashboard"
           className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-blue-300 hover:bg-blue-100"
         >
           <h2 className="mb-3 text-2xl font-semibold text-blue-900">

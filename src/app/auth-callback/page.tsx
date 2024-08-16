@@ -11,14 +11,15 @@ const Page = () => {
     const searchParams = useSearchParams();
     const origin = searchParams.get('origin');
 
+    console.log(error)
     useEffect(() => {
         const authenticateUser = async () => {
             try {
-                const response = await fetch('/api/authCallback');
+                const response = await fetch('/api/authCallBack');
                 const data = await response.json();
 
                 if (data.success) {
-                    router.push(origin ? `/${origin}` : "/dashboard");
+                    router.push(origin ? `/${origin}` : "/branddashboard");
                 } else {
                     setError(true);
                 }
