@@ -15,7 +15,7 @@ const BrandInfo: React.FC<BrandInfoProps> = ({ name, description, logoUrl, websi
   return (
     <Card className="p-6 bg-white shadow-md rounded-lg flex flex-col items-center space-y-4">
       <div className="flex items-center space-x-4">
-        <Image 
+        <img 
         src={logoUrl} 
         alt={`${name} logo`} 
         className="w-16 h-16 rounded-full object-cover" 

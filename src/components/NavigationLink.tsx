@@ -3,13 +3,14 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { Button } from './ui/button';
-import { Home, Hexagon, Coins, User } from 'lucide-react'; // Import icons from lucide-react
+import { Home, Hexagon, Coins, User } from 'lucide-react';
 import Link from 'next/link';
 
 const NavigationLinks = () => {
-  const pathname = usePathname(); // Use usePathname to get the current path
+  const pathname = usePathname();
 
   const navItems = [
+    { href: '/', label: 'Home', icon: <Home /> },
     { href: '/branddashboard', label: 'Dashboard', icon: <Home /> },
     { href: '/brands', label: 'Brands', icon: <Coins /> },
     { href: '/rewards', label: 'Rewards', icon: <Hexagon /> },

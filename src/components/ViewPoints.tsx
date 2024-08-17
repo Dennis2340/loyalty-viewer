@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect } from 'react';
 import { Card } from './ui/card';
 import { Loader2 } from 'lucide-react'; // For a loading spinner
@@ -10,7 +11,7 @@ interface PointsTransaction {
   date: string;
 }
 
-const ViewPoints: React.FC = () => {
+const ViewPoints: React.FC<{username:string}> = ({username}: {username: string}) => {
   const [pointsBalance, setPointsBalance] = useState<number | null>(null);
   const [transactions, setTransactions] = useState<PointsTransaction[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -43,6 +44,7 @@ const ViewPoints: React.FC = () => {
   return (
     <div className="space-y-6">
       <Card className="p-6">
+      <h1 className="text-3xl font-bold text-blue-900 mb-2">Hello, {username}!</h1>
         <h2 className="text-xl font-semibold text-blue-900 mb-4">Points Balance</h2>
         <div className="text-2xl font-bold text-blue-900">
           {isLoading ? (

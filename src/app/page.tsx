@@ -1,7 +1,14 @@
 import PoweredByGenelineX from '@/components/PoweredByGenelineX';
 import React from 'react';
+import { LoginLink, RegisterLink, getKindeServerSession, } from '@kinde-oss/kinde-auth-nextjs/server'
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
+import { buttonVariants } from '@/components/ui/button';
 
-export default function Home() {
+export default async function Home() {
+  const { getUser } = getKindeServerSession()
+  const user = await getUser()
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-blue-50">
       <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
@@ -20,6 +27,19 @@ export default function Home() {
       </div>
 
       <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-3 lg:text-left">
+        {!user ?<>
+        <RegisterLink className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-blue-300 hover:bg-blue-100">
+          <h2 className="mb-3 text-2xl font-semibold text-blue-900">
+              Sign Up
+              <span className="inline-block transition-transform group-hover:translate-x-1">
+                -&gt;
+              </span>
+            </h2>
+            <p className="m-0 max-w-[30ch] text-sm text-blue-700">
+              Sign up for new users.
+            </p>
+        </RegisterLink>
+      </>:null}
         <a
           href="/branddashboard"
           className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-blue-300 hover:bg-blue-100"

@@ -37,7 +37,13 @@ export async function POST(req: Request) {
 
 export async function GET(req: Request) {
   try {
-    const brands = await db.brand.findMany();
+    const { getUser } = getKindeServerSession();
+    const user = await getUser();
+    const userId = user?.id;
+
+    const brands = await db.brand.findMany({
+        where: {ownerId: userId}
+    });
 
     return new Response(JSON.stringify(brands), {
       status: 200,
