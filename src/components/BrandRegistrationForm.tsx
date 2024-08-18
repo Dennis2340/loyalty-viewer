@@ -1,37 +1,53 @@
-"use client"
-import React, { useState } from 'react';
-import { Button } from './ui/button';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
+"use client";
+import React, { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import Image from "next/image";
+import { useUploadThing } from "@/lib/uploadthing";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
 
 const BrandRegistrationForm = () => {
-  const [name, setName] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [logoUrl, setLogoUrl] = useState<string>('');
-  const [websiteUrl, setWebsiteUrl] = useState<string>('');
+  const [name, setName] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [logo, setLogo] = useState<File | null>(null);
+  const [logoUrl, setLogoUrl] = useState<string>("");
+  const [websiteUrl, setWebsiteUrl] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-
+  const { startUpload, isUploading } = useUploadThing("freePlanUploader");
   const { toast } = useToast();
+
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const file = e.target.files[0];
+      setLogo(file);
+    }
+  };
+
+  const handleLogoUpload = async (): Promise<void> => {
+    if (logo) {
+      const res = await startUpload([logo]);
+      const [responseFile] = res || [];
+      setLogoUrl(responseFile?.url || "");
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError(null);
 
     try {
-      const response = await fetch('/api/brands', {
-        method: 'POST',
+      const response = await fetch("/api/brands", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ name, description, logoUrl, websiteUrl }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to register brand.');
+        throw new Error("Failed to register brand.");
       }
 
       toast({
@@ -41,7 +57,6 @@ const BrandRegistrationForm = () => {
 
       // Optionally redirect or update the UI to show the new brand's info
     } catch (error: any) {
-      setError(error.message);
       toast({
         title: "Error Occurred",
         description: "Please try again.",
@@ -52,10 +67,18 @@ const BrandRegistrationForm = () => {
     }
   };
 
+  useEffect(() => {
+    if (logoUrl) {
+      setLogo(null);
+    }
+  }, [logoUrl]);
+
   return (
     <form className="space-y-6" onSubmit={handleSubmit}>
       <div>
-        <Label htmlFor="name" className="text-gray-700">Brand Name</Label>
+        <Label htmlFor="name" className="text-gray-700">
+          Brand Name
+        </Label>
         <Input
           id="name"
           value={name}
@@ -67,7 +90,9 @@ const BrandRegistrationForm = () => {
       </div>
 
       <div>
-        <Label htmlFor="description" className="text-gray-700">Brand Description</Label>
+        <Label htmlFor="description" className="text-gray-700">
+          Brand Description
+        </Label>
         <Input
           id="description"
           value={description}
@@ -79,37 +104,48 @@ const BrandRegistrationForm = () => {
       </div>
 
       <div>
-        <Label htmlFor="logoUrl" className="text-gray-700">Logo URL</Label>
+        <Label htmlFor="logo" className="text-gray-700">
+          Logo
+        </Label>
         <Input
-          id="logoUrl"
-          type="url"
-          value={logoUrl}
-          onChange={(e) => setLogoUrl(e.target.value)}
-          placeholder="https://example.com/logo.png"
+          id="logo"
+          type="file"
+          accept="image/*"
+          onChange={handleLogoChange}
           className="mt-1 block w-full"
         />
+        {logoUrl && (
+          <div className="mt-2">
+            <img
+              src={logoUrl}
+              alt="Logo preview"
+              className="w-16 h-16 object-cover"
+              width={64}
+              height={64}
+            />
+          </div>
+        )}
+        <Button onClick={handleLogoUpload} className="mt-2" disabled={isUploading}>
+          Upload {isUploading && <Loader2 className="h-4 w-4 animate-spin" />}
+        </Button>
       </div>
 
       <div>
-        <Label htmlFor="websiteUrl" className="text-gray-700">Website URL</Label>
+        <Label htmlFor="websiteUrl" className="text-gray-700">
+          Website URL
+        </Label>
         <Input
           id="websiteUrl"
           type="url"
           value={websiteUrl}
           onChange={(e) => setWebsiteUrl(e.target.value)}
-          placeholder="https://example.com/logo.png"
+          placeholder="https://example.com"
           className="mt-1 block w-full"
         />
       </div>
 
-      {error && <p className="text-red-600">{error}</p>}
-
-      <Button
-        type="submit"
-        className="w-full"
-        disabled={isSubmitting}
-      >
-        {isSubmitting ? <Loader2 className='h-4 w-4 animate-spin'/> : 'Register Brand'}
+      <Button type="submit" className="w-full" disabled={isSubmitting}>
+        {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Register Brand"}
       </Button>
     </form>
   );
